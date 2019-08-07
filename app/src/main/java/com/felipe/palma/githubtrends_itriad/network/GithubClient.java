@@ -79,7 +79,6 @@ public class GithubClient {
                 request = request.newBuilder()
                         .header("Cache-Control", "public, only-if-cached, max-stale=" + (60 * 60 * 24 * 7)) // 1 Week
                         .build();
-                Log.d("API", "New offline cache stored");
             }
             return chain.proceed(request);
         }

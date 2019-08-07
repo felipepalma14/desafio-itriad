@@ -1,6 +1,6 @@
 package com.felipe.palma.githubtrends_itriad.domain.response;
 
-import com.felipe.palma.githubtrends_itriad.domain.model.Item;
+import com.felipe.palma.githubtrends_itriad.domain.model.Repository;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by Felipe Palma on 05/08/2019.
  */
 
-public class RepositoriesResponse implements Serializable {
+public class RepositoriesResponse<T> implements Serializable {
     @SerializedName("total_count")
     @Expose
     private Integer totalCount;
@@ -20,7 +20,7 @@ public class RepositoriesResponse implements Serializable {
     private Boolean incompleteResults;
     @SerializedName("items")
     @Expose
-    private ArrayList<Item> items = null;
+    private ArrayList<T> items = null;
 
     public Integer getTotalCount() {
         return totalCount;
@@ -38,11 +38,11 @@ public class RepositoriesResponse implements Serializable {
         this.incompleteResults = incompleteResults;
     }
 
-    public ArrayList<Item> getItems() {
+    public ArrayList<T> getItems() {
         return items;
     }
 
-    public void setItems(ArrayList<Item> items) {
+    public void setItems(ArrayList<T> items) {
         this.items = items;
     }
 

@@ -1,9 +1,15 @@
-package com.felipe.palma.githubtrends_itriad.ui.fragment.favoritos;
+package com.felipe.palma.githubtrends_itriad.ui.fragment.trend;
+
 
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,10 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.felipe.palma.githubtrends_itriad.R;
+import com.felipe.palma.githubtrends_itriad.domain.model.Language;
 import com.felipe.palma.githubtrends_itriad.domain.model.Repository;
+import com.felipe.palma.githubtrends_itriad.ui.fragment.favoritos.RepositoriesContract;
+import com.felipe.palma.githubtrends_itriad.ui.fragment.favoritos.RepositoriesPresenter;
 import com.felipe.palma.githubtrends_itriad.view.EndlessRecyclerViewScrollListener;
 import com.felipe.palma.githubtrends_itriad.view.adapter.AnimationItem;
 import com.felipe.palma.githubtrends_itriad.view.adapter.RecyclerItemClickListener;
@@ -31,7 +44,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class FavoritosFragment extends Fragment implements RepositoriesContract.View {
+public class TrendingFragment extends Fragment implements TrendingContract.View  {
+
+    private String timeSpan;
 
     private Unbinder mUnbinder;
 
@@ -42,16 +57,23 @@ public class FavoritosFragment extends Fragment implements RepositoriesContract.
     @BindView(R.id.loading_view)
     ProgressBar mLoading;
 
-    private RepositoriesContract.Presenter mPresenter;
+
+    private TrendingContract.Presenter mPresenter;
     private ArrayList<Repository> mListRepositories = new ArrayList<>();
     private RepositoryAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
 
 
 
-
-    public FavoritosFragment() {
+    public TrendingFragment() {
         // Required empty public constructor
+    }
+
+    public static Fragment newInstance(Context context, Language language, String timeSpan) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("extra_language", language);
+        bundle.putSerializable("extra_time_span", timeSpan);
+        Log.d("newInstance", language.name);
+        return Fragment.instantiate(context, TrendingFragment.class.getName(), bundle);
     }
 
 
@@ -59,18 +81,22 @@ public class FavoritosFragment extends Fragment implements RepositoriesContract.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_favoritos,container, false);
+        View rootView = inflater.inflate(R.layout.fragment_trending,container, false);
 
         mUnbinder = ButterKnife.bind(this, rootView);
-        mPresenter = new RepositoriesPresenter(this);
+        mPresenter = new TrendingPresenter(this);
+
+
         initViews();
 
 
-        mPresenter.loadRepositories(1);
-
-
         return rootView;
+    }
+
+    public void updateTimeSpan(String timeSpan) {
+        this.timeSpan = timeSpan;
+
+        mPresenter.loadTrendingRepositories(timeSpan,"javascript");
     }
 
     @Override
@@ -87,19 +113,19 @@ public class FavoritosFragment extends Fragment implements RepositoriesContract.
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             mAdapter.clearItems();
-            mPresenter.loadRepositories(1);
+            mPresenter.loadTrendingRepositories("daily","javascript");
             onItemsLoadComplete();
         });
 
-        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                mPresenter.loadRepositories(page);
-                int curSize = mAdapter.getItemCount();
-                mAdapter.notifyItemRangeInserted(curSize, mListRepositories.size() - 1);
-                Log.d("totalItemsCount",totalItemsCount+"");
-            }
-        });
+//        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                mPresenter.loadRepositories(page);
+//                int curSize = mAdapter.getItemCount();
+//                mAdapter.notifyItemRangeInserted(curSize, mListRepositories.size() - 1);
+//                Log.d("totalItemsCount",totalItemsCount+"");
+//            }
+//        });
 
     }
 
@@ -121,8 +147,10 @@ public class FavoritosFragment extends Fragment implements RepositoriesContract.
 
     @Override
     public void showRepositories(ArrayList<Repository> itens) {
+        mAdapter.clearItems();
         mAdapter.addRepoItems(itens);
         mListRepositories = mAdapter.getItems();
+        Log.d("TOTAL", mListRepositories.size()+"");
         showAnimation();
 
     }
@@ -141,7 +169,7 @@ public class FavoritosFragment extends Fragment implements RepositoriesContract.
 
     private void setupRecyclerView() {
         int spacing = getResources().getDimensionPixelOffset(R.dimen.default_spacing_small);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new ItemOffsetDecoration(spacing));
     }
@@ -155,13 +183,8 @@ public class FavoritosFragment extends Fragment implements RepositoriesContract.
         String owner = item.getOwner().getLogin();
         String repository = item.getName();
 
-//        if(UnsplashApplication.hasNetwork()){
-//            Intent mIntent = new Intent(this, PullRequestActivity.class);
-//            mIntent.putExtra(Config.OWNER,owner);
-//            mIntent.putExtra(Config.REPO,repository);
-//            startActivity(mIntent);
-//        }else{
-//            Toast.makeText(context, getResources().getString(R.string.internet_offline),Toast.LENGTH_LONG).show();
-//        }
     };
+
+
+
 }

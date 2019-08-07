@@ -1,6 +1,8 @@
 package com.felipe.palma.githubtrends_itriad.network;
 
 
+import com.felipe.palma.githubtrends_itriad.domain.model.GithubUser;
+import com.felipe.palma.githubtrends_itriad.domain.model.Language;
 import com.felipe.palma.githubtrends_itriad.domain.model.Repository;
 import com.felipe.palma.githubtrends_itriad.domain.response.RepositoriesResponse;
 
@@ -16,10 +18,14 @@ public interface IServiceGithub {
         void onError(String error);
     }
 
-    void getListRepository(String q, String sort, int page,
-                           IServiceCallback<RepositoriesResponse> callback);
+    void getFavouriteRepositories(String q, String sort, int page,
+                                  IServiceCallback<RepositoriesResponse<Repository>> callback);
 
-    void getTrendingRepo(IServiceCallback<ArrayList<Repository>> callback);
+
+    void getHotUsers(String q, String sort, int page,
+                                  IServiceCallback<RepositoriesResponse<GithubUser>> callback);
+
+    void getTrendingRepo(String since, String language, IServiceCallback<ArrayList<Repository>> callback);
 
 
 }

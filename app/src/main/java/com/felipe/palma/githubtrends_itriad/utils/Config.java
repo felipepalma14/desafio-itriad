@@ -9,10 +9,12 @@ public class Config {
 
     public static final String BASE_URL = "https://api.github.com/";
 
-    public static final String BASE_URL_TRENDING = "http://trending.codehub-app.com/v2/trending";
+    public static final String BASE_URL_TRENDING = "http://trending.codehub-app.com/v2/trending/";
 
     public static final String PARAM_QUERY = "language:Java";
-    public static final String PARAM_SORT = "stars";
+    public static final String PARAM_SORT_STARS = "stars";
+
+    public static final String PARAM_SORT_FOLLOWERS = "followers";
 
     public static final String OWNER = "OWNER";
     public static final String REPO = "REPO";

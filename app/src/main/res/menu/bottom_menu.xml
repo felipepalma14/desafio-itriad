@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_trending"
+        android:icon="@drawable/ic_trending_24"
+        android:title="Tendências"
+        app:cnb_iconColor="@color/favorites" />
+    <item
         android:id="@+id/menu_famous_users"
         android:icon="@drawable/ic_famous_user_24"
         android:title="Favoritos"
@@ -10,15 +15,10 @@
 
     <item
         android:id="@+id/menu_hot_repo"
-        android:title="Mais Acessados"
+        android:title="Mais Seguidos"
         android:icon="@drawable/ic_hot_repo_24"
         app:cnb_iconColor="@color/activity"/>
 
-    <item
-        android:id="@+id/menu_trending"
-        android:icon="@drawable/ic_trending_24"
-        android:title="Tendências"
-        app:cnb_iconColor="@color/favorites" />
 
 
 </menu>
