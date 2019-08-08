@@ -23,7 +23,7 @@ public class ServiceGithubImp implements IServiceGithub {
     public void getFavouriteRepositories(String query, String sort, int page, IServiceCallback<RepositoriesResponse<Repository>> callback) {
 
 
-        Call<RepositoriesResponse<Repository>> mCall = mService.getRepositoryList(query,sort,page);
+        Call<RepositoriesResponse<Repository>> mCall = mService.getRepositoryList("language:"+query,sort,page);
 
         mCall.enqueue(new Callback<RepositoriesResponse<Repository>>() {
             @Override
@@ -48,7 +48,7 @@ public class ServiceGithubImp implements IServiceGithub {
 
     @Override
     public void getHotUsers(String query, String sort, int page, IServiceCallback<RepositoriesResponse<GithubUser>> callback) {
-        Call<RepositoriesResponse<GithubUser>> mCall = mService.getUserList(query,sort,page);
+        Call<RepositoriesResponse<GithubUser>> mCall = mService.getUserList("language:"+query,sort,page);
 
         mCall.enqueue(new Callback<RepositoriesResponse<GithubUser>>() {
             @Override

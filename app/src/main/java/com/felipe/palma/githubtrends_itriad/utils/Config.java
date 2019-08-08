@@ -24,4 +24,9 @@ public class Config {
 
 
     public static final String SAVE_STATE_PAGE = "SAVE_STATE_PAGE" ;
+
+    public static final String SAVE_STATE_LANGUAGE = "SAVE_STATE_LANGUAGE" ;
+    public static final String SAVE_STATE_TIME_SPAN = "SAVE_STATE_TIME_SPAN" ;
+
+
 }

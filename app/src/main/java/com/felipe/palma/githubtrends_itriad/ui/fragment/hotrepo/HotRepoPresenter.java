@@ -18,10 +18,10 @@ public class HotRepoPresenter implements HotRepoContract.Presenter{
     }
 
     @Override
-    public void loadRepositories(int page) {
+    public void loadRepositories(String query, int page) {
         this.mView.showDialog();
         ServiceGithubImp mServiceGithubImp = new ServiceGithubImp();
-        mServiceGithubImp.getHotUsers(Config.PARAM_QUERY, Config.PARAM_SORT_FOLLOWERS, page, new IServiceGithub.IServiceCallback<RepositoriesResponse<GithubUser>>() {
+        mServiceGithubImp.getHotUsers(query, Config.PARAM_SORT_FOLLOWERS, page, new IServiceGithub.IServiceCallback<RepositoriesResponse<GithubUser>>() {
             @Override
             public void onSuccess(RepositoriesResponse repositoriesResponse) {
                 mView.showRepositories(repositoriesResponse.getItems());

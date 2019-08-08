@@ -1,190 +1,255 @@
 package com.felipe.palma.githubtrends_itriad.ui.fragment.trend;
 
 
-import android.content.Context;
-import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.felipe.palma.githubtrends_itriad.R;
 import com.felipe.palma.githubtrends_itriad.domain.model.Language;
-import com.felipe.palma.githubtrends_itriad.domain.model.Repository;
-import com.felipe.palma.githubtrends_itriad.ui.fragment.favoritos.RepositoriesContract;
-import com.felipe.palma.githubtrends_itriad.ui.fragment.favoritos.RepositoriesPresenter;
-import com.felipe.palma.githubtrends_itriad.view.EndlessRecyclerViewScrollListener;
-import com.felipe.palma.githubtrends_itriad.view.adapter.AnimationItem;
-import com.felipe.palma.githubtrends_itriad.view.adapter.RecyclerItemClickListener;
-import com.felipe.palma.githubtrends_itriad.view.adapter.RepositoryAdapter;
-import com.felipe.palma.githubtrends_itriad.view.adapter.decoration.ItemOffsetDecoration;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class TrendingFragment extends Fragment implements TrendingContract.View  {
+public class TrendingFragment extends Fragment {
 
-    private String timeSpan;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.pager)
+    ViewPager viewPager;
+    @BindView(R.id.app_bar)
+    AppBarLayout appbar;
 
-    private Unbinder mUnbinder;
+    private Unbinder mButterKnife;
+    private String mTimeSpan;
 
-    @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.loading_view)
-    ProgressBar mLoading;
+    protected ViewPager.OnPageChangeListener onPageChangeListener;
+    protected int mCurrentPosition = 0;
+    private ActionBar actionBar;
 
-
-    private TrendingContract.Presenter mPresenter;
-    private ArrayList<Repository> mListRepositories = new ArrayList<>();
-    private RepositoryAdapter mAdapter;
-
-
-
-    public TrendingFragment() {
-        // Required empty public constructor
-    }
-
-    public static Fragment newInstance(Context context, Language language, String timeSpan) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("extra_language", language);
-        bundle.putSerializable("extra_time_span", timeSpan);
-        Log.d("newInstance", language.name);
-        return Fragment.instantiate(context, TrendingFragment.class.getName(), bundle);
-    }
-
-
+    protected int appbarOffset;
+    private LanguagesPagerAdapter mPagerAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_trending,container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.layout_appbar,container, false);
 
-        mUnbinder = ButterKnife.bind(this, rootView);
-        mPresenter = new TrendingPresenter(this);
-
-
-        initViews();
-
+        mButterKnife = ButterKnife.bind(this, rootView);
 
         return rootView;
     }
 
-    public void updateTimeSpan(String timeSpan) {
-        this.timeSpan = timeSpan;
-
-        mPresenter.loadTrendingRepositories(timeSpan,"javascript");
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        initViews();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mUnbinder.unbind();
+        mButterKnife.unbind();
     }
 
+    private void initToolbar() {
+        actionBar.setTitle(null);
 
-    private void initViews(){
-        mAdapter = new RepositoryAdapter(getContext(),mListRepositories,recyclerItemClickListener);
-        setupRecyclerView();
-        mRecyclerView.setAdapter(mAdapter);
+        View spinnerContainer = LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_spinner, toolbar, false);
+        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        toolbar.addView(spinnerContainer, lp);
 
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mAdapter.clearItems();
-            mPresenter.loadTrendingRepositories("daily","javascript");
-            onItemsLoadComplete();
+        Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
+        spinner.setAdapter(new SinceSpinnerAdapter());
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: // daily
+                        mTimeSpan = "daily";
+                        break;
+                    case 1: // weekly
+                        mTimeSpan = "weekly";
+                        break;
+                    case 2: // monthly
+                        mTimeSpan = "monthly";
+                        break;
+
+                }
+                updateTimeSpan(mCurrentPosition);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
 
-//        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount) {
-//                mPresenter.loadRepositories(page);
-//                int curSize = mAdapter.getItemCount();
-//                mAdapter.notifyItemRangeInserted(curSize, mListRepositories.size() - 1);
-//                Log.d("totalItemsCount",totalItemsCount+"");
-//            }
-//        });
-
     }
 
-    @Override
-    public void hideDialog() {
-        mLoading.setVisibility(View.GONE);
+
+    private void initViews() {
+
+        if (null != toolbar) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (null != actionBar) {
+                initToolbar();
+            }
+        }
+
+
+
+        appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                appbarOffset = verticalOffset;
+            }
+        });
+
+
+        mPagerAdapter = new LanguagesPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(mPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+        if (null != onPageChangeListener) {
+            viewPager.removeOnPageChangeListener(onPageChangeListener);
+        }
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mCurrentPosition = position;
+                updateTimeSpan(mCurrentPosition);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
-    @Override
-    public void showDialog() {
-        if(!mSwipeRefreshLayout.isRefreshing())
-            mLoading.setVisibility(View.VISIBLE);
+    private void updateTimeSpan(final int position) {
+        Fragment fragment = getChildFragmentManager().findFragmentByTag(mPagerAdapter.getFragmentTag(R.id.pager, position));
+        if (fragment instanceof TrendListFragment) {
+            if (fragment.isAdded()) {
+                ((TrendListFragment) fragment).updateTimeSpan(mTimeSpan);
+            }
+        }
     }
 
-    @Override
-    public void showError(String error) {
+    public class SinceSpinnerAdapter extends BaseAdapter {
+        final String[] timeSpanTextArray = new String[]{"De Hoje", "Desta Semana", "Deste Mês"};
 
+        @Override
+        public int getCount() {
+            return timeSpanTextArray.length;
+        }
+
+        @Override
+        public String getItem(int position) {
+            return timeSpanTextArray[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView != null ? convertView :
+                    LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_spinner_item_actionbar, parent, false);
+
+            TextView textView = (TextView) view.findViewById(android.R.id.text1);
+            textView.setText("Trends " + getItem(position));
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            View view = convertView != null ? convertView :
+                    LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_spinner_item_dropdown, parent, false);
+
+            TextView textView = (TextView) view.findViewById(android.R.id.text1);
+            textView.setText(getItem(position));
+
+            return view;
+        }
     }
 
-    @Override
-    public void showRepositories(ArrayList<Repository> itens) {
-        mAdapter.clearItems();
-        mAdapter.addRepoItems(itens);
-        mListRepositories = mAdapter.getItems();
-        Log.d("TOTAL", mListRepositories.size()+"");
-        showAnimation();
 
+    public class LanguagesPagerAdapter extends FragmentPagerAdapter {
+        List<Language> languagesArray = new ArrayList<>();
+
+        public LanguagesPagerAdapter(FragmentManager fm) {
+            super(fm);
+            Language allLanguages = new Language("Todas",null);
+            Language java = new Language("Java","java");
+            Language php = new Language("PHP","php");
+            Language javascript = new Language("Javascript","javascript");
+            Language python = new Language("Python","python");
+            Language go = new Language("Go","go");
+
+
+            languagesArray.add(allLanguages);
+            languagesArray.add(java);
+            languagesArray.add(php);
+            languagesArray.add(javascript);
+            languagesArray.add(python);
+            languagesArray.add(go);
+
+
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return TrendListFragment.newInstance(getContext(), languagesArray.get(position),mTimeSpan);
+        }
+
+        @Override
+        public int getCount() {
+            return languagesArray.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return languagesArray.get(position).name;
+        }
+
+        public String getFragmentTag(int viewPagerId, int fragmentPosition) {
+            return "android:switcher:" + viewPagerId + ":" + fragmentPosition;
+        }
     }
-
-    @Override
-    public void showAnimation() {
-        Context context = mRecyclerView.getContext();
-        AnimationItem mAnimationItem =  new AnimationItem("Slide from bottom", R.anim.layout_animation_from_bottom);
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, mAnimationItem.getResourceId());
-
-        mRecyclerView.setLayoutAnimation(controller);
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-        mRecyclerView.scheduleLayoutAnimation();
-    }
-
-    private void setupRecyclerView() {
-        int spacing = getResources().getDimensionPixelOffset(R.dimen.default_spacing_small);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new ItemOffsetDecoration(spacing));
-    }
-
-    private void onItemsLoadComplete() {
-
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    private RecyclerItemClickListener<Repository> recyclerItemClickListener = item -> {
-        String owner = item.getOwner().getLogin();
-        String repository = item.getName();
-
-    };
-
 
 
 }

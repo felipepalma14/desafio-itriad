@@ -20,7 +20,7 @@ public interface HotRepoContract {
     }
 
     interface Presenter{
-        void loadRepositories(int page);
+        void loadRepositories(String query, int page);
     }
 
 }

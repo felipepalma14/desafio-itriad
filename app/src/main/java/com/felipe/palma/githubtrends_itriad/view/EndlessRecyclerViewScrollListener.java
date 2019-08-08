@@ -5,9 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-/**
- * Created by Felipe Palma on 06/08/2019.
- */
+
 
 /*
     REF: https://gist.github.com/nesquena/8a976dd3d6f866518db2cfe7f9cb0db7

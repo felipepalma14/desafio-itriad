@@ -18,10 +18,11 @@ public class RepositoriesPresenter implements RepositoriesContract.Presenter{
     }
 
     @Override
-    public void loadRepositories(int page) {
+    public void loadRepositories(String query, int page) {
         this.mView.showDialog();
+
         ServiceGithubImp mServiceGithubImp = new ServiceGithubImp();
-        mServiceGithubImp.getFavouriteRepositories(Config.PARAM_QUERY, Config.PARAM_SORT_STARS, page, new IServiceGithub.IServiceCallback<RepositoriesResponse<Repository>>() {
+        mServiceGithubImp.getFavouriteRepositories(query, Config.PARAM_SORT_STARS, page, new IServiceGithub.IServiceCallback<RepositoriesResponse<Repository>>() {
             @Override
             public void onSuccess(RepositoriesResponse repositoriesResponse) {
                 mView.showRepositories(repositoriesResponse.getItems());
