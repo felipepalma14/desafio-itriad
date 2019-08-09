@@ -71,6 +71,28 @@ public class ServiceGithubImp implements IServiceGithub {
     }
 
     @Override
+    public void getHotUserDetail(String username, IServiceCallback<GithubUser> callback) {
+        Call<GithubUser> mCall = mService.getUserDetails(username);
+
+        mCall.enqueue(new Callback<GithubUser>() {
+            @Override
+            public void onResponse(Call<GithubUser> call, Response<GithubUser> response) {
+                if(!response.isSuccessful()){
+                    callback.onError("Ocorreu um erro: " + response.errorBody().toString() );
+                    return;
+                }
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<GithubUser> call, Throwable t) {
+                callback.onError(t.getMessage());
+
+            }
+        });
+    }
+
+    @Override
     public void getTrendingRepo(String since, String language, IServiceCallback<ArrayList<Repository>> callback) {
         Call<ArrayList<Repository>> mCall = mService.getTrendingRepo(since,language);
 

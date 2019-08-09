@@ -36,4 +36,23 @@ public class HotRepoPresenter implements HotRepoContract.Presenter{
         });
 
     }
+
+    @Override
+    public void loadUserDetails(String username) {
+            ServiceGithubImp mServiceGithubImp = new ServiceGithubImp();
+            mServiceGithubImp.getHotUserDetail(username, new IServiceGithub.IServiceCallback<GithubUser>() {
+                @Override
+                public void onSuccess(GithubUser response) {
+                    mView.sendUserDetails(response);
+                    //mView.hideDialog();
+                }
+
+                @Override
+                public void onError(String error) {
+                    mView.showError(error);
+                    //mView.hideDialog();
+                }
+            });
+
+    }
 }

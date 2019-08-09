@@ -108,9 +108,8 @@
                             app:layout_constraintWidth_default="percent"
                             app:layout_constraintWidth_percent="0.45" />
 
-
                         <TextView
-                            android:id="@+id/item_profile_title"
+                            android:id="@+id/item_user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin"
@@ -129,39 +128,68 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/item_profile_img" />
 
-
-                        <ImageView
-                            android:id="@+id/item_img_language"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                        <TextView
+                            android:id="@+id/item_user_login"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin"
                             android:layout_marginTop="8dp"
-                            android:layout_marginRight="2dp"
-                            android:paddingStart="@dimen/margin_small"
-                            android:paddingLeft="@dimen/margin_small"
-                            app:layout_constraintRight_toLeftOf="@+id/item_language"
-                            app:layout_constraintTop_toBottomOf="@+id/item_profile_title" />
+                            android:layout_marginRight="@dimen/margin"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:paddingEnd="@dimen/margin"
+                            android:paddingRight="@dimen/margin"
+                            android:text="Detail View Repo"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/font_small"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.502"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/item_user_name" />
+
+
 
                         <TextView
-                            android:id="@+id/item_language"
+                            android:id="@+id/item_user_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginRight="@dimen/margin"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:paddingEnd="@dimen/margin"
+                            android:paddingRight="@dimen/margin"
+                            android:text="Detail View Repo"
+                            android:textColor="@color/color_desc_repo"
+                            android:textSize="@dimen/font_small"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.502"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/item_user_login" />
+
+
+                        <Button
+                            android:id="@+id/btn_view_github"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
                             android:gravity="center_vertical"
-                            android:paddingStart="@dimen/margin_small"
-                            android:paddingLeft="@dimen/margin_small"
-                            android:paddingEnd="@dimen/margin_xxlarge"
-                            android:paddingRight="@dimen/margin_xxlarge"
-                            android:text="Java"
+                            android:text="@string/view_user_url"
                             android:textColor="@color/color_desc_repo"
                             android:textSize="@dimen/font_xmedium"
+                            android:textAlignment="center"
+                            style="@style/ShareButtonStyle"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.501"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/item_profile_title" />
+                            app:layout_constraintTop_toBottomOf="@+id/item_user_location" />
 
 
                         <TextView
-                            android:id="@+id/item_count_stars"
+                            android:id="@+id/item_count_followers"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_large"
@@ -172,35 +200,36 @@
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toLeftOf="@+id/line1"
-                            app:layout_constraintTop_toBottomOf="@+id/item_language" />
+                            app:layout_constraintTop_toBottomOf="@+id/btn_view_github" />
 
 
                         <TextView
-                            android:id="@+id/item_stars_title"
+                            android:id="@+id/item_followers_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             style="@style/TextCountStyle"
-                            android:text="@string/text_stars"
+                            android:text="@string/followers_title"
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toLeftOf="@+id/line1"
-                            app:layout_constraintTop_toBottomOf="@+id/item_count_stars" />
+                            app:layout_constraintTop_toBottomOf="@+id/item_count_followers" />
 
                         <View
                             android:id="@+id/line1"
                             android:layout_width="1dp"
                             android:layout_height="65dp"
                             android:layout_marginTop="16dp"
+                            android:layout_marginRight="10dp"
                             android:background="@color/color_item_line_separator"
                             app:layout_constraintHorizontal_chainStyle="spread"
-                            app:layout_constraintLeft_toRightOf="@+id/item_count_stars"
-                            app:layout_constraintRight_toLeftOf="@+id/item_count_watchers"
-                            app:layout_constraintTop_toBottomOf="@+id/item_language" />
+                            app:layout_constraintLeft_toRightOf="@+id/item_count_followers"
+                            app:layout_constraintRight_toLeftOf="@+id/item_count_public_repo"
+                            app:layout_constraintTop_toBottomOf="@+id/btn_view_github" />
 
 
                         <TextView
-                            android:id="@+id/item_count_watchers"
+                            android:id="@+id/item_count_public_repo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_large"
@@ -211,36 +240,39 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/item_language" />
+                            app:layout_constraintTop_toBottomOf="@+id/btn_view_github" />
 
 
                         <TextView
-                            android:id="@+id/item_watchers_title"
+                            android:id="@+id/item_public_repo_title"
+                            style="@style/TextCountStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
                             android:gravity="center_vertical"
-                            android:text="@string/text_watchers"
-                            style="@style/TextCountStyle"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            android:text="Public Repo"
+                            app:layout_constraintEnd_toStartOf="@+id/line2"
                             app:layout_constraintHorizontal_chainStyle="spread"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/item_count_watchers" />
+                            app:layout_constraintStart_toEndOf="@+id/line1"
+                            app:layout_constraintTop_toBottomOf="@+id/item_count_public_repo" />
 
 
                         <View
                             android:id="@+id/line2"
                             android:layout_width="1dp"
                             android:layout_height="65dp"
+                            android:layout_marginLeft="10dp"
                             android:layout_marginTop="16dp"
                             android:background="@color/color_item_line_separator"
                             app:layout_constraintHorizontal_chainStyle="spread"
-                            app:layout_constraintLeft_toRightOf="@+id/item_count_watchers"
-                            app:layout_constraintRight_toLeftOf="@+id/item_count_forks"
-                            app:layout_constraintTop_toBottomOf="@+id/item_language" />
+                            app:layout_constraintLeft_toRightOf="@+id/item_count_public_repo"
+                            app:layout_constraintRight_toLeftOf="@+id/item_count_following"
+                            app:layout_constraintTop_toBottomOf="@+id/btn_view_github" />
 
 
                         <TextView
-                            android:id="@+id/item_count_forks"
+                            android:id="@+id/item_count_following"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_large"
@@ -251,20 +283,20 @@
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintLeft_toRightOf="@+id/line2"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/item_language" />
+                            app:layout_constraintTop_toBottomOf="@+id/btn_view_github" />
 
 
                         <TextView
-                            android:id="@+id/item_forks_title"
+                            android:id="@+id/item_following_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="@string/text_forks"
+                            android:text="@string/following_title"
                             style="@style/TextCountStyle"
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintLeft_toRightOf="@+id/line2"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/item_count_forks" />
+                            app:layout_constraintTop_toBottomOf="@+id/item_count_following" />
 
 
                         <View
@@ -275,7 +307,7 @@
                             android:layout_marginTop="@dimen/margin_xxxlarge"
                             android:background="@color/color_count"
                             app:layout_constraintHorizontal_chainStyle="spread"
-                            app:layout_constraintTop_toBottomOf="@+id/item_forks_title" />
+                            app:layout_constraintTop_toBottomOf="@+id/item_following_title" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

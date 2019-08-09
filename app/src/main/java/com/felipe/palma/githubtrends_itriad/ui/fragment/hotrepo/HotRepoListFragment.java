@@ -186,6 +186,13 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
         mRecyclerView.scheduleLayoutAnimation();
     }
 
+    @Override
+    public void sendUserDetails(GithubUser user) {
+        Intent mIntent = new Intent(getContext(), HotRepoDetailActivity.class);
+        mIntent.putExtra(Config.USER, user);
+        startActivity(mIntent);
+    }
+
     private void setupRecyclerView() {
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         int spacing = getResources().getDimensionPixelOffset(R.dimen.default_spacing_small);
@@ -200,9 +207,8 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
     }
 
     private RecyclerItemClickListener<GithubUser> recyclerItemClickListener = item -> {
-        Intent mIntent = new Intent(getContext(), HotRepoDetailActivity.class);
-        mIntent.putExtra(Config.REPO, item);
-        startActivity(mIntent);
+        mPresenter.loadUserDetails(item.getLogin());
+
     };
 
 }

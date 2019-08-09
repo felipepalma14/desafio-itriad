@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -30,6 +31,10 @@ public interface IServiceGithubEndPoint {
             @Query("sort") String sort,
             @Query("page") int page
     );
+
+    @GET("users/{username}")
+    Call<GithubUser> getUserDetails(@Path("username") String username);
+
 
     @GET(Config.BASE_URL_TRENDING)
     Call<ArrayList<Repository>> getTrendingRepo(

@@ -36,6 +36,9 @@ public class TrendDetailActivity extends AppCompatActivity {
     @BindView(R.id.item_img_language)
     ImageView mImageViewLanguageImage;
 
+    @BindView(R.id.item_language)
+    TextView mTextViewLanguage;
+
     @BindView(R.id.toolbar_detail)
     Toolbar mToolbar;
 
@@ -58,8 +61,6 @@ public class TrendDetailActivity extends AppCompatActivity {
     TextView mTextViewCountWatchers;
 
 
-    @BindView(R.id.item_language)
-    TextView mTextViewLanguage;
 
 
 

@@ -25,6 +25,8 @@ public interface IServiceGithub {
     void getHotUsers(String q, String sort, int page,
                                   IServiceCallback<RepositoriesResponse<GithubUser>> callback);
 
+    void getHotUserDetail(String username, IServiceCallback<GithubUser> callback);
+
     void getTrendingRepo(String since, String language, IServiceCallback<ArrayList<Repository>> callback);
 
 

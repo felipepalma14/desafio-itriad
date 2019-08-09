@@ -9,7 +9,8 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Felipe Palma on 07/08/2019.
  */
-public class GithubUser  implements Parcelable {
+
+public class GithubUser implements Parcelable{
 
     @SerializedName("login")
     @Expose
@@ -65,9 +66,45 @@ public class GithubUser  implements Parcelable {
     @SerializedName("site_admin")
     @Expose
     private Boolean siteAdmin;
-    @SerializedName("score")
+    @SerializedName("name")
     @Expose
-    private Double score;
+    private String name;
+    @SerializedName("company")
+    @Expose
+    private String company;
+    @SerializedName("blog")
+    @Expose
+    private String blog;
+    @SerializedName("location")
+    @Expose
+    private String location;
+    @SerializedName("email")
+    @Expose
+    private Object email;
+    @SerializedName("hireable")
+    @Expose
+    private Object hireable;
+    @SerializedName("bio")
+    @Expose
+    private Object bio;
+    @SerializedName("public_repos")
+    @Expose
+    private Integer publicRepos;
+    @SerializedName("public_gists")
+    @Expose
+    private Integer publicGists;
+    @SerializedName("followers")
+    @Expose
+    private Integer followers;
+    @SerializedName("following")
+    @Expose
+    private Integer following;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
 
     protected GithubUser(Parcel in) {
         login = in.readString();
@@ -93,11 +130,32 @@ public class GithubUser  implements Parcelable {
         type = in.readString();
         byte tmpSiteAdmin = in.readByte();
         siteAdmin = tmpSiteAdmin == 0 ? null : tmpSiteAdmin == 1;
+        name = in.readString();
+        company = in.readString();
+        blog = in.readString();
+        location = in.readString();
         if (in.readByte() == 0) {
-            score = null;
+            publicRepos = null;
         } else {
-            score = in.readDouble();
+            publicRepos = in.readInt();
         }
+        if (in.readByte() == 0) {
+            publicGists = null;
+        } else {
+            publicGists = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            followers = null;
+        } else {
+            followers = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            following = null;
+        } else {
+            following = in.readInt();
+        }
+        createdAt = in.readString();
+        updatedAt = in.readString();
     }
 
     public static final Creator<GithubUser> CREATOR = new Creator<GithubUser>() {
@@ -256,12 +314,108 @@ public class GithubUser  implements Parcelable {
         this.siteAdmin = siteAdmin;
     }
 
-    public Double getScore() {
-        return score;
+    public String getName() {
+        return name;
     }
 
-    public void setScore(Double score) {
-        this.score = score;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getBlog() {
+        return blog;
+    }
+
+    public void setBlog(String blog) {
+        this.blog = blog;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Object getEmail() {
+        return email;
+    }
+
+    public void setEmail(Object email) {
+        this.email = email;
+    }
+
+    public Object getHireable() {
+        return hireable;
+    }
+
+    public void setHireable(Object hireable) {
+        this.hireable = hireable;
+    }
+
+    public Object getBio() {
+        return bio;
+    }
+
+    public void setBio(Object bio) {
+        this.bio = bio;
+    }
+
+    public Integer getPublicRepos() {
+        return publicRepos;
+    }
+
+    public void setPublicRepos(Integer publicRepos) {
+        this.publicRepos = publicRepos;
+    }
+
+    public Integer getPublicGists() {
+        return publicGists;
+    }
+
+    public void setPublicGists(Integer publicGists) {
+        this.publicGists = publicGists;
+    }
+
+    public Integer getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Integer followers) {
+        this.followers = followers;
+    }
+
+    public Integer getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Integer following) {
+        this.following = following;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -294,11 +448,35 @@ public class GithubUser  implements Parcelable {
         dest.writeString(receivedEventsUrl);
         dest.writeString(type);
         dest.writeByte((byte) (siteAdmin == null ? 0 : siteAdmin ? 1 : 2));
-        if (score == null) {
+        dest.writeString(name);
+        dest.writeString(company);
+        dest.writeString(blog);
+        dest.writeString(location);
+        if (publicRepos == null) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeDouble(score);
+            dest.writeInt(publicRepos);
         }
+        if (publicGists == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(publicGists);
+        }
+        if (followers == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(followers);
+        }
+        if (following == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(following);
+        }
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
     }
 }

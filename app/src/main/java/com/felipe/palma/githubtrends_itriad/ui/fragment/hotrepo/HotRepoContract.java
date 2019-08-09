@@ -17,10 +17,12 @@ public interface HotRepoContract {
         void showError(String error);
         void showRepositories(ArrayList<GithubUser> itens);
         void showAnimation();
+        void sendUserDetails(GithubUser user);
     }
 
     interface Presenter{
         void loadRepositories(String query, int page);
+        void loadUserDetails(String username);
     }
 
 }

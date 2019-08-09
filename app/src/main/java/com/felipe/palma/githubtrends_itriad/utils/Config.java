@@ -23,6 +23,7 @@ public class Config {
     public static final String PARAM_SORT_FOLLOWERS = "followers";
 
     public static final String REPO = "REPO";
+    public static final String USER = "USER";
 
     public static final String SAVE_STATE_LANGUAGE = "SAVE_STATE_LANGUAGE" ;
     public static final String SAVE_STATE_TIME_SPAN = "SAVE_STATE_TIME_SPAN" ;
