@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_detail"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:contentInsetStartWithNavigation="0dp"
+        android:padding="0dp"
+        app:contentPadding="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetEnd="0dp"
+        app:contentInsetRight="0dp"
+        app:titleMarginStart="0dp"
+        app:contentPaddingRight="0dp"
+        android:paddingRight="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/blank"
+            android:padding="12dp"
+            android:maxEms="15"
+            android:textSize="18sp"
+            android:text="@string/app_name" />
+
+    </androidx.appcompat.widget.Toolbar>
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.felipe.palma.githubtrends_itriad.ui.fragment.trend;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.felipe.palma.githubtrends_itriad.R;
 import com.felipe.palma.githubtrends_itriad.domain.model.Language;
@@ -79,8 +81,6 @@ public class TrendListFragment extends Fragment implements TrendingContract.View
         mUnbinder = ButterKnife.bind(this, rootView);
         mPresenter = new TrendingPresenter(this);
 
-
-
         initViews();
 
 
@@ -127,7 +127,7 @@ public class TrendListFragment extends Fragment implements TrendingContract.View
 
     @Override
     public void showError(String error) {
-
+        Log.d("ERROR", error);
     }
 
     @Override
@@ -163,8 +163,9 @@ public class TrendListFragment extends Fragment implements TrendingContract.View
     }
 
     private RecyclerItemClickListener<Repository> recyclerItemClickListener = item -> {
-        String owner = item.getOwner().getLogin();
-        String repository = item.getName();
+        Intent mIntent = new Intent(getContext(), TrendDetailActivity.class);
+        mIntent.putExtra(Config.REPO, item);
+        startActivity(mIntent);
 
     };
 

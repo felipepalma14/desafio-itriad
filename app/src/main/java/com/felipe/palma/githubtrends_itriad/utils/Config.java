@@ -1,5 +1,11 @@
 package com.felipe.palma.githubtrends_itriad.utils;
 
+import com.felipe.palma.githubtrends_itriad.R;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Felipe Palma on 05/08/2019.
  */
@@ -16,17 +22,29 @@ public class Config {
 
     public static final String PARAM_SORT_FOLLOWERS = "followers";
 
-    public static final String OWNER = "OWNER";
     public static final String REPO = "REPO";
-
-    public static final String SAVE_LIST_STATE = "SAVE_LIST";
-    public static final String SAVE_STATE = "SAVE_STATE";
-
-
-    public static final String SAVE_STATE_PAGE = "SAVE_STATE_PAGE" ;
 
     public static final String SAVE_STATE_LANGUAGE = "SAVE_STATE_LANGUAGE" ;
     public static final String SAVE_STATE_TIME_SPAN = "SAVE_STATE_TIME_SPAN" ;
 
+    public static final Map<String, Integer> LANGUAGE_COLOR_MAP = Collections.unmodifiableMap(
+            new HashMap<String, Integer>() {{
+                put("Java", R.color.colorPrimary);
+                put("C", R.color.colorAccent);
+                put("PHP", R.color.color_orange);
+                put("Python", R.color.color_blue);
+                put("JavaScript", R.color.color_yellow);
+                put("Go", R.color.color_red);
+            }});
+
+    public static final Map<String, Integer> LANGUAGE_IMAGE_MAP = Collections.unmodifiableMap(
+            new HashMap<String, Integer>() {{
+                put("Java", R.drawable.java_logo);
+                put("C",  R.drawable.c_logo);
+                put("PHP",  R.drawable.php_logo);
+                put("Python", R.drawable.python_logo);
+                put("JavaScript", R.drawable.js_logo);
+                put("Go",  R.drawable.go_logo);
+            }});
 
 }

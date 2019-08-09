@@ -2,6 +2,7 @@ package com.felipe.palma.githubtrends_itriad.ui.fragment.hotrepo;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.felipe.palma.githubtrends_itriad.R;
 import com.felipe.palma.githubtrends_itriad.domain.model.GithubUser;
@@ -27,6 +29,7 @@ import com.felipe.palma.githubtrends_itriad.domain.model.Language;
 import com.felipe.palma.githubtrends_itriad.domain.model.Repository;
 import com.felipe.palma.githubtrends_itriad.ui.fragment.favoritos.RepositoriesContract;
 import com.felipe.palma.githubtrends_itriad.ui.fragment.favoritos.RepositoriesPresenter;
+import com.felipe.palma.githubtrends_itriad.ui.fragment.trend.TrendDetailActivity;
 import com.felipe.palma.githubtrends_itriad.ui.fragment.trend.TrendListFragment;
 import com.felipe.palma.githubtrends_itriad.utils.Config;
 import com.felipe.palma.githubtrends_itriad.view.EndlessRecyclerViewScrollListener;
@@ -65,8 +68,7 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
     private ArrayList<GithubUser> mListGithubUsers = new ArrayList<>();
     private GithubUserAdapter mAdapter;
 
-    private LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
-
+    private LinearLayoutManager mLinearLayoutManager;
 
 
 
@@ -100,7 +102,7 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
 
         initViews();
 
-        mPresenter.loadRepositories(language.getPath(), 1);
+        callData();
 
 
         return rootView;
@@ -112,10 +114,15 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
 
     }
 
+    private void callData() {
+        mAdapter.clearItems();
+        mPresenter.loadRepositories(language.getPath(), 1);
+    }
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mUnbinder.unbind();
     }
 
     private void initViews(){
@@ -124,8 +131,7 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
         mRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mAdapter.clearItems();
-            mPresenter.loadRepositories(language.getPath(), 1);
+            callData();
             onItemsLoadComplete();
         });
 
@@ -133,10 +139,6 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mPresenter.loadRepositories(language.getPath(), page);
-                int curSize = mAdapter.getItemCount();
-                mAdapter.notifyItemRangeInserted(curSize, mListGithubUsers.size() - 1);
-
-                Log.d("ITEM", curSize+"");
             }
         });
 
@@ -144,7 +146,10 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
 
     @Override
     public void hideDialog() {
+
         mLoading.setVisibility(View.GONE);
+
+        showAnimation();
     }
 
     @Override
@@ -155,14 +160,17 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
 
     @Override
     public void showError(String error) {
-
+        Log.d("ERROR", error);
     }
 
     @Override
     public void showRepositories(ArrayList<GithubUser> itens) {
         mAdapter.addRepoItems(itens);
         mListGithubUsers = mAdapter.getItems();
-        showAnimation();
+
+        int curSize = mAdapter.getItemCount();
+        mAdapter.notifyItemRangeInserted(curSize, mListGithubUsers.size() - 1);
+        Log.d("ITEM", curSize+"");
 
     }
 
@@ -179,6 +187,7 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
     }
 
     private void setupRecyclerView() {
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
         int spacing = getResources().getDimensionPixelOffset(R.dimen.default_spacing_small);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -190,9 +199,10 @@ public class HotRepoListFragment extends Fragment implements HotRepoContract.Vie
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    private RecyclerItemClickListener<Repository> recyclerItemClickListener = item -> {
-        String owner = item.getOwner().getLogin();
-        String repository = item.getName();
+    private RecyclerItemClickListener<GithubUser> recyclerItemClickListener = item -> {
+        Intent mIntent = new Intent(getContext(), HotRepoDetailActivity.class);
+        mIntent.putExtra(Config.REPO, item);
+        startActivity(mIntent);
     };
 
 }
