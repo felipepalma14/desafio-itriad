@@ -6,12 +6,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.felipe.palma.githubtrends_itriad.R;
 import com.felipe.palma.githubtrends_itriad.ui.fragment.favoritos.FavoritosFragment;
 import com.felipe.palma.githubtrends_itriad.ui.fragment.hotrepo.HotRepoFragment;
 import com.felipe.palma.githubtrends_itriad.ui.fragment.hotrepo.HotRepoListFragment;
 import com.felipe.palma.githubtrends_itriad.ui.fragment.trend.TrendingFragment;
+import com.felipe.palma.githubtrends_itriad.utils.UnsplashApplication;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 import butterknife.BindView;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private HotRepoFragment mHotRepoFragment;
     private TrendingFragment mTrendingFragment;
 
+    protected UnsplashApplication app;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+
+        app = (UnsplashApplication)getApplication();
+
+        if(!app.isNetworkAvailable())
+            Toast.makeText(this,"Não há conexão com Internt!",Toast.LENGTH_LONG).show();
 
         selectFragment(R.id.menu_trending);
 
