@@ -59,11 +59,15 @@ public class AppUtils {
     }
 
     public static Drawable updateDrawableImageLanguage(Context context, String language) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return context.getResources().getDrawable(Config.LANGUAGE_IMAGE_MAP.get(language), context.getTheme());
-        } else {
-            return context.getResources().getDrawable(Config.LANGUAGE_IMAGE_MAP.get(language));
+        Integer color = Config.LANGUAGE_IMAGE_MAP.get(language);
+        if (color != null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                return context.getResources().getDrawable(color, context.getTheme());
+            } else {
+                return context.getResources().getDrawable(color);
+            }
         }
+        return context.getResources().getDrawable(R.drawable.ic_circle, context.getTheme());
 
     }
 }

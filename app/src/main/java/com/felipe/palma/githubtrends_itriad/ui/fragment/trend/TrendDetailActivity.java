@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -120,6 +121,7 @@ public class TrendDetailActivity extends AppCompatActivity {
 
     private void updateColorTheme() {
         int bgColor = AppUtils.getColorByLanguage(getApplicationContext(), mRepository.getLanguage());
+        Log.d("COLOR", bgColor + " - " + mRepository.getLanguage());
 
         mAppBarLayout.setBackgroundColor(bgColor);
         mToolbar.setBackgroundColor(bgColor);
